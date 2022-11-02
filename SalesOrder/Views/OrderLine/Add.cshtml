@@ -1,0 +1,57 @@
+﻿@model SalesOrder.Models.OrderLine
+@using SalesOrder.Models
+@{
+    ViewBag.Title = "Add ";
+}
+
+
+<div class="container-fluid" style="margin-top:50px">
+
+    <div class="row">
+        @using (Html.BeginForm("Add", "OrderLine", FormMethod.Post))
+        {
+            @Html.ValidationSummary(true)
+           
+            @Html.Hidden("OrderID")
+              
+            <div class="col">
+                <label for="">Product Code*</label>
+                @Html.TextBox("productCode", "", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ProductCode)
+
+            </div>
+            <div class="col">
+                <label for="">Product Type*</label>
+                @Html.DropDownList("ProductType", new SelectList(Enum.GetValues(typeof(ProductTypes))), "--Select Order type--", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ProductType)
+            </div>
+            <div class="col">
+                <label for="">Cost Price*</label>
+                @Html.TextBox("CostPrice", "",new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CostPrice)
+            </div>
+
+            <div class="col">
+                <label for="">Sale Price*</label>
+                @Html.TextBox("SalePrice", "", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.SalePrice)
+            </div>
+            <div class="col">
+                <label for="">Quantity*</label>
+                @Html.TextBox("Quantity", "", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Quantity)
+            </div>
+            
+            <div class="col">
+                <input type="submit" value="Add" class="btn btn btn-success" />
+   
+            </div>
+        }
+        <div style="color:Blue;font-family:Arial">
+            @Html.ActionLink("Back", "Index","Home")
+            
+        </div>
+       
+
+    </div>
+</div>

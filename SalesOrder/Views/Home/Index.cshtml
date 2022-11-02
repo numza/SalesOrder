@@ -1,0 +1,414 @@
+﻿@using SalesOrder.Models
+@model IEnumerable<SalesOrder.Models.OrderHeader>
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="container-fluid py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            
+            <div class="card shadow border-0">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5>Order Header</h5>
+                    <a href="/Home/add" class="btn btn-primary">Add New </a>
+                </div>
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-6 col-md-6">
+                            <div class="form-group">
+                                <label for="">Order Number</label>
+                                <input type="text" class="form-control" name="" id="" aria-describedby="helpId" placeholder="">
+                                <small id="helpId" class="form-text text-muted">Only Alphabet And Numbers Allowed!!</small>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-6">
+                            <div class="row">
+                                <div class="col-12 col-md-5">
+                                    <div class="form-group">
+                                        <label for="">From</label>
+                                        <input type="date" class="form-control" name="" id="" aria-describedby="helpId" placeholder="">
+                                        <small id="helpId" class="form-text text-muted"></small>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-5">
+                                    <div class="form-group">
+                                        <label for="">From</label>
+                                        <input type="date" class="form-control" name="" id="" aria-describedby="helpId" placeholder="">
+                                        <small id="helpId" class="form-text text-muted"></small>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="card-body">
+
+                    <table class="table table-striped table-inverse table-responsive">
+                        <thead class="thead-inverse">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Order Number</th>
+                                <th scope="col">Order Type</th>
+                                <th scope="col">Order Status</th>
+                                <th scope="col">Customer Name</th>
+                                <th scope="col">Create Date</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var order in Model)
+                            {
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <th>
+                                        @Html.DisplayFor(modelItem => order.OrderNumber)
+                                    </th>
+                                    <td>@Html.DisplayFor(modelItem => order.OrderType)</td>
+                                    <td>@Html.DisplayFor(modelItem => order.OrderStatus)</td>
+                                    <td>@Html.DisplayFor(modelItem => order.CustomerName)</td>
+                                    <td>@Html.DisplayFor(modelItem => order.OrderDate)</td>
+                                    <td class="tbLink"><button class="btn btn-primary btn-xs more" id="@order.Id">view</button></td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12" id="btnAddorderline" style="visibility: hidden">
+            <div class="card shadow-none border-0" >
+                <div class="card-header d-flex justify-content-between align-items-center" >
+                    <h5>Selected Order Number: <span></span></h5>
+                    <a class="btn btn-primary btnAddLine">Add New Order line </a>
+                </div>
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-6 col-md-6">
+                            <div class="form-group">
+                                <label for="">Product Code</label>
+                                <input type="text" class="form-control" name="" id="" aria-describedby="helpId" placeholder="">
+                                <small id="helpId" class="form-text text-muted">Only Alphabet And Numbers Allowed!!</small>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="card-body">
+
+                    <table class="table table-striped table-inverse table-responsive">
+                        <thead class="thead-inverse">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Line Number</th>
+                                <th scope="col">Product Code</th>
+                                <th scope="col">Product Type</th>
+                                <th scope="col">Cost Price</th>
+                                <th scope="col">Sales Price</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tblorderLine">
+                        </tbody>
+                    </table>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+    </div>
+    <!-- Modal -->
+    @*<div class="modal fade" id="modelAdd" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">*@
+    <div class="modal fade" id="modelAdd" tabindex="-1" aria-labelledby="modelTitleId" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <form id="editForm" action="/OrderLine/Edit" method="post">
+                            <div class="row">
+                                <input type="hidden" name="lineNumber" />
+                                <input type="hidden" name="orderId" />
+                                <div class="col">
+                                    <label for="">Product Code*</label>
+                                    <input type="text"
+                                           value=""
+                                           class="form-control"
+                                           required name="pCode" id=""
+                                           aria-describedby="helpId" placeholder="">
+                                    @*<small id="helpId" class="form-text text-muted">Help text</small>*@
+                                </div>
+                                <div class="col">
+                                    <label for="">Product Type*</label>
+                                    <select class="form-control" onchange="" required name="pType" id="pType">
+                                        <option>Apparel</option>
+                                        <option>Parts</option>
+                                        <option>Equipment</option>
+                                        <option>Motor</option>
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <label for="">Cost Price*</label>
+                                    <input type="number"
+                                           min="0"
+                                           value=""
+                                           class="form-control" required name="cPrice" id="" aria-describedby="helpId" placeholder="">
+                                    @*<small id="helpId" class="form-text text-muted">Help text</small>*@
+                                </div>
+                                <div class="col">
+                                    <label for="">Sales Price*</label>
+                                    <input type="number"
+                                           min="0"
+                                           value=""
+                                           class="form-control" required name="sPrice" id="" aria-describedby="helpId" placeholder="">
+                                    @*<small id="helpId" class="form-text text-muted">Help text</small>*@
+                                </div>
+                                <div class="col">
+                                    <label for="">Quantity*</label>
+                                    <input type="number" min="0"
+                                           value=""
+                                           class="form-control" required name="quantity" id="" aria-describedby="helpId" placeholder="">
+                                    @*<small id="helpId" class="form-text text-muted">Help text</small>*@
+                                </div>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-secondary closeModel" id="" data-dismiss="modal">Close</a>
+                    <a id="btnSaveEdit" class="btn btn-primary">Save</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*<div class="modal fade" id="modelremove" tabindex="-1" role="dialog" aria-labelledby="modeltitleid" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            add rows here
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">close</button>
+                        <button type="button" class="btn btn-primary">save</button>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+</div>
+
+<script src="~/Scripts/jquery-3.6.0.min.js"></script>
+
+<script>
+
+    //edit order line
+    $(document).on("click", ".btnEditLine", function (e) {
+
+
+        //get id value for a selected button
+        var id = $(this).attr("id");
+
+        $.ajax(
+            {
+                type: 'GET',
+                dataType: 'JSON',
+                url: '/OrderLine/getOrderLineById/' + id,
+                data: { id: JSON.stringify(id) },
+                success:
+                    function (response) {
+                        //Add data to a model
+                        displayOrderLine(response);
+                    },
+                error:
+                    function (response) {
+                        alert("Error: " + response);
+                    }
+            });
+        function displayOrderLine(orderLine) {
+            // Fill all fields that will be edited
+            $("input[name~='orderId']").val(orderLine.OrderID.toString());
+            $("input[name~='lineNumber']").val(orderLine.LineNumber.toString());
+            $("input[name~='pCode']").val(orderLine.ProductCode.toString());
+            $("#pType").val(orderLine.ProductType.toString());
+            $("input[name~='cPrice']").val(orderLine.CostPrice.toString());
+            $("input[name~='sPrice']").val(orderLine.SalePrice.toString());
+            $("input[name~='quantity']").val(orderLine.Quantity.toString());
+
+        }
+    })
+    //Get orderline for selected orderHeader
+    $(document).on("click", ".more", function (e) {
+
+        //
+        $("#btnAddorderline").removeAttr("style");
+        $("#btnAddorderline").css('display', 'block');
+        // get id value for a selected button
+        var id = $(this).attr("id");
+        // Add customized href for btnAddLine link
+        $('.btnAddLine').attr('href', "/OrderLine/add/" + id);
+        $.ajax(
+            {
+                type: 'GET',
+                dataType: 'JSON',
+                url: '/Home/getOrderLineByOrderNumber/' + id,
+                //data: { id: JSON.stringify(id) },
+                success:
+                    function (response) {
+                        // Generate HTML table.
+
+                        $('#tblorderLine').html('');
+                        if (response.length <= 0) {
+
+                            $('#tblorderLine').html('<tr><td colspan="6" style="text-align:center"><h2>Nothing found.</h2></tb></tr>');
+
+                        }
+                        else {
+
+                            var tr;
+                            //Append each row to html table
+                            var count = 1;
+                            for (var i = 0; i < response.length; i++) {
+                                tr = $('<tr/>');
+                                tr.append("<td>" + (i + 1) + "</td>");
+                                tr.append("<td>" + response[i].LineNumber + "</td>");
+                                tr.append("<td>" + response[i].ProductCode + "</td>");
+                                tr.append("<td>" + response[i].ProductType + "</td>");
+                                tr.append("<td>" + response[i].CostPrice + "</td>");
+                                tr.append("<td>" + response[i].SalePrice + "</td>");
+                                tr.append("<td>" + response[i].Quantity + "</td>");
+                                tr.append("<td>" +
+                                    '<a class="btn btn-success btn-xs btnEditLine" id="' + response[i].LineNumber + '"data-toggle="modal" data-target="#modelAdd">Edit</a>' +
+                                    '<a class="btn btn-link btn-xs" data-toggle="modal" data-target="#modelRemove">Remove</a>'
+                                    + "</td>");
+
+                                $('#tblorderLine').append(tr);
+                            }
+                        }
+
+                    },
+                error:
+                    function (response) {
+                        alert("Error: " + response);
+                    }
+            });
+    })
+    // Submit model data
+    $(document).on("click", "#btnSaveEdit", function (e) {
+        var frm = $('#editForm');
+        var userData = new Object();
+        userData = createObject();
+        $.ajax({
+            type: 'POST',
+            url: '/OrderLine/Edit',
+            data: userData,
+            dataType: "json",
+            success: function (data) {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Your work has been saved',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                createOrderLineTable(data)
+                $(".closeModel").click();
+                clearFields();
+            },
+            error: function (data) {
+                console.log('An error occurred.');
+            },
+        });
+
+        function createObject() {
+            let UserDate = {
+                OrderID: $("input[name~='orderId']").val(),
+                LineNumber: $("input[name~='lineNumber']").val(),
+                ProductCode: $("input[name~='pCode']").val(),
+                ProductType: $("#pType").val(),
+                CostPrice: $("input[name~='cPrice']").val(),
+                SalePrice: $("input[name~='sPrice']").val(),
+                Quantity: $("input[name~='quantity']").val()
+            };
+
+            return UserDate;
+        }
+        function clearFields() {
+
+            $("input[name~='orderId']").val(""),
+                $("input[name~='lineNumber']").val(""),
+                $("input[name~='pCode']").val(""),
+                $("#pType").val(""),
+                $("input[name~='cPrice']").val(""),
+                $("input[name~='sPrice']").val(""),
+                $("input[name~='quantity']").val("")
+        }
+        function createOrderLineTable(response) {
+
+            $('#tblorderLine').html('');
+            if (response.length <= 0) {
+
+                $('#tblorderLine').html('<tr><td colspan="7" style="text-align:center"><h2>Nothing found.</h2></tb></tr>');
+
+            }
+            else {
+
+                var tr;
+                //Append each row to html table
+                var count = 1;
+                for (var i = 0; i < response.length; i++) {
+                    tr = $('<tr/>');
+                    tr.append("<td>" + (i + 1) + "</td>");
+                    tr.append("<td>" + response[i].LineNumber + "</td>");
+                    tr.append("<td>" + response[i].ProductCode + "</td>");
+                    tr.append("<td>" + response[i].ProductType + "</td>");
+                    tr.append("<td>" + response[i].CostPrice + "</td>");
+                    tr.append("<td>" + response[i].SalePrice + "</td>");
+                    tr.append("<td>" + response[i].Quantity + "</td>");
+                    tr.append("<td>" +
+                        '<a class="btn btn-success btn-xs btnEditLine" id="' + response[i].LineNumber + '"data-toggle="modal" data-target="#modelAdd">Edit</a>' +
+                        '<a class="btn btn-link btn-xs" data-toggle="modal" data-target="#modelRemove">Remove</a>'
+                        + "</td>");
+
+                    $('#tblorderLine').append(tr);
+                }
+            }
+        }
+    })
+
+</script>

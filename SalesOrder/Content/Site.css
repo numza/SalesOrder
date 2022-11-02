@@ -1,0 +1,10 @@
+﻿/*.container{
+    padding-top:100px
+}*/
+
+.tblorderLine{
+    display:none !important;
+}
+.field-validation-error{
+    color:red !important
+}
